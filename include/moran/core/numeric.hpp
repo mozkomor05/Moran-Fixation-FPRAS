@@ -20,8 +20,7 @@ class KahanAccumulator {
 public:
     constexpr KahanAccumulator() noexcept = default;
 
-    constexpr explicit KahanAccumulator(Scalar initial) noexcept
-        : sum_(initial) {}
+    constexpr explicit KahanAccumulator(Scalar initial) noexcept : sum_(initial) {}
 
     constexpr KahanAccumulator& operator+=(Scalar value) noexcept {
         const Scalar t = sum_ + value;
@@ -34,9 +33,7 @@ public:
         return *this;
     }
 
-    [[nodiscard]] constexpr Scalar sum() const noexcept {
-        return sum_ + compensation_;
-    }
+    [[nodiscard]] constexpr Scalar sum() const noexcept { return sum_ + compensation_; }
 
     constexpr void reset() noexcept {
         sum_ = Scalar(0);
@@ -44,7 +41,7 @@ public:
     }
 
 private:
-    Scalar sum_          = Scalar(0);
+    Scalar sum_ = Scalar(0);
     Scalar compensation_ = Scalar(0);
 };
 
@@ -84,7 +81,7 @@ template <MoranScalar Scalar>
 [[nodiscard]] Scalar fixation_from_log_gammas(std::span<const Scalar> log_gamma) {
     const std::size_t n_minus_1 = log_gamma.size();
     if (n_minus_1 == 0) {
-        return Scalar(1); // Trivial: population size 1
+        return Scalar(1);  // Trivial: population size 1
     }
 
     std::vector<Scalar> log_prods(n_minus_1);
@@ -103,10 +100,8 @@ template <MoranScalar Scalar>
 
 /// Stable (1 - r^{-a}) / (1 - r^{-b}). Falls back to a/b when r ~ 1.
 template <MoranScalar Scalar>
-[[nodiscard]] Scalar stable_fixation_ratio(
-    Scalar r, Scalar a, Scalar b,
-    Scalar tol = Scalar(1e-12))
-{
+[[nodiscard]] Scalar stable_fixation_ratio(Scalar r, Scalar a, Scalar b,
+                                           Scalar tol = Scalar(1e-12)) {
     const Scalar log_r = std::log(r);
     if (std::abs(log_r) < tol) {
         return a / b;
@@ -121,4 +116,4 @@ template <MoranScalar Scalar>
     return num / den;
 }
 
-} // namespace moran::numeric
+}  // namespace moran::numeric

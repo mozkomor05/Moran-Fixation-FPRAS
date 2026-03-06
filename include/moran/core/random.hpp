@@ -36,9 +36,7 @@ public:
     }
 
     static constexpr result_type min() noexcept { return 0; }
-    static constexpr result_type max() noexcept {
-        return std::numeric_limits<result_type>::max();
-    }
+    static constexpr result_type max() noexcept { return std::numeric_limits<result_type>::max(); }
 
     result_type operator()() noexcept {
         const std::uint64_t result = std::rotl(state_[1] * 5, 7) * 9;
@@ -58,9 +56,8 @@ public:
     // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
     void jump() noexcept {
         static constexpr std::array<std::uint64_t, 4> kJump = {
-            0x180ec6d33cfd0abaULL, 0xd5a61266f0c9392cULL,
-            0xa9582618e03fc9aaULL, 0x39abdc4529b1661cULL
-        };
+            0x180ec6d33cfd0abaULL, 0xd5a61266f0c9392cULL, 0xa9582618e03fc9aaULL,
+            0x39abdc4529b1661cULL};
         std::array<std::uint64_t, 4> s = {};
         for (const auto jmp : kJump) {
             for (int b = 0; b < 64; ++b) {
@@ -80,10 +77,8 @@ private:
 };
 
 /// Create independent RNG engines via 2^128 jumps.
-inline std::vector<Xoshiro256StarStar> make_thread_engines(
-    const std::uint64_t master_seed,
-    const int num_threads)
-{
+inline std::vector<Xoshiro256StarStar> make_thread_engines(const std::uint64_t master_seed,
+                                                           const int num_threads) {
     std::vector<Xoshiro256StarStar> engines;
     engines.reserve(static_cast<std::size_t>(num_threads));
 
@@ -104,10 +99,7 @@ template <MoranScalar Scalar>
 
 /// Sample from Geometric(p) via inverse-CDF. Saturates to prevent overflow.
 template <MoranScalar Scalar>
-[[nodiscard]] std::uint64_t geometric_sample(
-    const Scalar p,
-    Xoshiro256StarStar& rng) noexcept
-{
+[[nodiscard]] std::uint64_t geometric_sample(const Scalar p, Xoshiro256StarStar& rng) noexcept {
     constexpr std::uint64_t kMaxGeometric = std::numeric_limits<std::uint64_t>::max() / 2;
     if (p >= Scalar(1)) {
         return 0;
@@ -124,8 +116,7 @@ template <MoranScalar Scalar>
     const Scalar log1mp = std::log1p(-p);
     const auto k = std::log(u) / log1mp;
 
-    constexpr auto max_safe =
-        static_cast<Scalar>(kMaxGeometric);
+    constexpr auto max_safe = static_cast<Scalar>(kMaxGeometric);
     if (!(k < max_safe)) {  // also catches NaN
         return kMaxGeometric;
     }
@@ -133,10 +124,10 @@ template <MoranScalar Scalar>
 }
 
 /// Uniform random index in [0, n) with FP safety clamp.
-[[nodiscard]] inline std::size_t uniform_index(Xoshiro256StarStar& rng, const std::size_t n) noexcept {
+[[nodiscard]] inline std::size_t uniform_index(Xoshiro256StarStar& rng,
+                                               const std::size_t n) noexcept {
     assert(n > 0 && "uniform_index: n must be > 0");
-    auto idx = static_cast<std::size_t>(
-        uniform_01<double>(rng) * static_cast<double>(n));
+    auto idx = static_cast<std::size_t>(uniform_01<double>(rng) * static_cast<double>(n));
     if (idx >= n) {
         idx = n - 1;
     }
@@ -145,9 +136,11 @@ template <MoranScalar Scalar>
 
 /// Resolve RNG seed: 0 means draw from std::random_device.
 [[nodiscard]] inline std::uint64_t resolve_seed(const std::uint64_t seed) {
-    if (seed != 0) { return seed; }
+    if (seed != 0) {
+        return seed;
+    }
     std::random_device rd;
     return (static_cast<std::uint64_t>(rd()) << 32) | rd();
 }
 
-} // namespace moran
+}  // namespace moran
