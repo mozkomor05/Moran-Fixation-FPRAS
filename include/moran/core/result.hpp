@@ -43,7 +43,7 @@ struct MoranError {
                            error_code_name(code), message);
     }
 
-    static constexpr std::string_view error_code_name(const ErrorCode c) {
+    [[nodiscard]] static constexpr std::string_view error_code_name(const ErrorCode c) {
         switch (c) {
             case ErrorCode::InvalidPopulationSize:
                 return "InvalidPopulationSize";
@@ -59,9 +59,8 @@ struct MoranError {
                 return "MaxStepsExceeded";
             case ErrorCode::InvalidConfig:
                 return "InvalidConfig";
-            default:
-                return "Unknown";
         }
+        return "Unknown";
     }
 };
 

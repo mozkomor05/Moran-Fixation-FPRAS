@@ -4,7 +4,6 @@
 
 #include <concepts>
 #include <ranges>
-#include <span>
 
 #include "types.hpp"
 

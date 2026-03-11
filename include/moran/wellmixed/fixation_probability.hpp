@@ -16,7 +16,8 @@ namespace moran::wellmixed {
 
 /// Fixation probability from i0 initial mutants (constant fitness r).
 template <MoranScalar Scalar>
-[[nodiscard]] Result<Scalar> fixation_probability_from(std::size_t N, std::size_t i0, Scalar r) {
+[[nodiscard]] Result<Scalar> fixation_probability_from(const std::size_t N, const std::size_t i0,
+                                                       const Scalar r) {
     if (auto v = validate_population_size(N); !v) {
         return std::unexpected(v.error());
     }
@@ -39,7 +40,7 @@ template <MoranScalar Scalar>
 
 /// Single-mutant fixation probability (i0 = 1).
 template <MoranScalar Scalar>
-[[nodiscard]] Result<Scalar> fixation_probability_exact(std::size_t N, Scalar r) {
+[[nodiscard]] Result<Scalar> fixation_probability_exact(const std::size_t N, const Scalar r) {
     return fixation_probability_from(N, std::size_t{1}, r);
 }
 
@@ -47,7 +48,7 @@ template <MoranScalar Scalar>
 template <MoranScalar Scalar, typename GammaFn>
     requires std::invocable<GammaFn, std::size_t> &&
              std::convertible_to<std::invoke_result_t<GammaFn, std::size_t>, Scalar>
-[[nodiscard]] Result<Scalar> fixation_probability_general(std::size_t N, std::size_t i0,
+[[nodiscard]] Result<Scalar> fixation_probability_general(const std::size_t N, const std::size_t i0,
                                                           const GammaFn& gamma) {
     if (auto v = validate_population_size(N); !v) {
         return std::unexpected(v.error());
@@ -61,7 +62,7 @@ template <MoranScalar Scalar, typename GammaFn>
 
     std::vector<Scalar> log_gamma(N - 1);
     for (std::size_t i = 1; i < N; ++i) {
-        Scalar g = gamma(i);
+        const Scalar g = gamma(i);
         if (!(g > Scalar(0)) || !std::isfinite(g)) {
             return make_error(
                 ErrorCode::InvalidFitness,

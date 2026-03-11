@@ -44,7 +44,7 @@ template <Graph G>
 
 /// Validate that a fitness value is positive and finite.
 template <MoranScalar Scalar>
-[[nodiscard]] Result<void> validate_fitness(Scalar r) {
+[[nodiscard]] Result<void> validate_fitness(const Scalar r) {
     if (!(r > Scalar(0)) || !std::isfinite(r)) {
         return make_error(
             ErrorCode::InvalidFitness,
@@ -54,7 +54,7 @@ template <MoranScalar Scalar>
 }
 
 /// Validate that a population size is >= 1.
-[[nodiscard]] inline Result<void> validate_population_size(std::size_t N) {
+[[nodiscard]] inline Result<void> validate_population_size(const std::size_t N) {
     if (N == 0) {
         return make_error(ErrorCode::InvalidPopulationSize, "Population size must be >= 1");
     }
@@ -84,7 +84,7 @@ template <Graph G>
 
 /// Validate graph + fitness for MC simulations.
 template <Graph G, MoranScalar Scalar>
-[[nodiscard]] Result<void> validate_graph_mc(const G& graph, Scalar r) {
+[[nodiscard]] Result<void> validate_graph_mc(const G& graph, const Scalar r) {
     if (auto validation = validate_for_fpras(graph); !validation) {
         return std::unexpected(validation.error());
     }

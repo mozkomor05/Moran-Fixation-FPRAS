@@ -15,7 +15,6 @@
 #include "../core/result.hpp"
 #include "../core/types.hpp"
 #include "../fpras/params.hpp"
-#include "../graph/graph_utils.hpp"
 #include "../graph/graph_validation.hpp"
 #include "types.hpp"
 
@@ -128,7 +127,7 @@ struct NaiveAccum {
 /// Naive MC fixation probability (Díaz et al. 2014, §3).
 /// Derives sample count from epsilon/delta.
 template <Graph GraphType>
-[[nodiscard]] Result<FixationResult> naive_mc_fixation(const GraphType& graph, double r,
+[[nodiscard]] Result<FixationResult> naive_mc_fixation(const GraphType& graph, const double r,
                                                        const SimulationConfig& config = {}) {
     if (auto v = validate_graph_mc(graph, r); !v) {
         return std::unexpected(v.error());
@@ -186,7 +185,6 @@ template <Graph GraphType>
         .ci_lower = ci_lo,
         .ci_upper = ci_hi,
         .method = Method::mc_naive,
-        .error_model = ErrorModel::multiplicative,
         .epsilon = config.accuracy.epsilon,
         .delta = config.accuracy.delta,
         .samples = effective_samples,

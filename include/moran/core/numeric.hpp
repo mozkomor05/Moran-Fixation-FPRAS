@@ -5,7 +5,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <concepts>
 #include <limits>
 #include <span>
 #include <vector>
@@ -100,8 +99,8 @@ template <MoranScalar Scalar>
 
 /// Stable (1 - r^{-a}) / (1 - r^{-b}). Falls back to a/b when r ~ 1.
 template <MoranScalar Scalar>
-[[nodiscard]] Scalar stable_fixation_ratio(Scalar r, Scalar a, Scalar b,
-                                           Scalar tol = Scalar(1e-12)) {
+[[nodiscard]] Scalar stable_fixation_ratio(const Scalar r, const Scalar a, const Scalar b,
+                                           const Scalar tol = Scalar(1e-12)) {
     const Scalar log_r = std::log(r);
     if (std::abs(log_r) < tol) {
         return a / b;

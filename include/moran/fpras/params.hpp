@@ -10,7 +10,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <format>
-#include <limits>
 
 #include "../core/result.hpp"
 #include "../core/types.hpp"
@@ -80,17 +79,6 @@ struct DerivedParams {
     const auto samples = safe_ceil(z) * boost;
     const auto u = safe_ceil(diaz_absorption_bound(n, r));
     return {.samples = samples, .per_run_step_limit = u};
-}
-
-/// Well-mixed MC parameters (Hoeffding bound for Bernoulli trials).
-/// Same sample count as Diaz naive. No step limit (geometric sampling).
-[[nodiscard]] inline DerivedParams well_mixed_mc(const std::size_t N, const Accuracy& acc) {
-    const double nd = static_cast<double>(N);
-    const double eps = acc.epsilon;
-    const double z = 0.5 * nd * nd * std::log(16.0) / (eps * eps);
-    const auto boost = median_boost(acc.delta);
-    const auto samples = safe_ceil(z) * boost;
-    return {.samples = samples, .per_run_step_limit = 0};
 }
 
 /// Multiplicative CI: [est/(1+eps), est/(1-eps)], clamped to [0, 1].

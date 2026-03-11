@@ -77,8 +77,8 @@ private:
 };
 
 /// Create independent RNG engines via 2^128 jumps.
-inline std::vector<Xoshiro256StarStar> make_thread_engines(const std::uint64_t master_seed,
-                                                           const int num_threads) {
+[[nodiscard]] inline std::vector<Xoshiro256StarStar> make_thread_engines(
+    const std::uint64_t master_seed, const int num_threads) {
     std::vector<Xoshiro256StarStar> engines;
     engines.reserve(static_cast<std::size_t>(num_threads));
 

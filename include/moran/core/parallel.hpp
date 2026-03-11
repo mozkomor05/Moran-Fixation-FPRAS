@@ -23,7 +23,7 @@ namespace moran {
 
 /// Resolve the actual number of threads to use.
 /// If requested <= 0, returns omp_get_max_threads() (or 1 without OpenMP).
-[[nodiscard]] inline int resolve_num_threads(int requested) noexcept {
+[[nodiscard]] inline int resolve_num_threads(const int requested) noexcept {
     if (requested > 0) {
         return requested;
     }
@@ -36,8 +36,9 @@ namespace moran {
 
 /// Compute how many samples thread `tid` should process, given `total`
 /// samples spread across `num_threads` threads via round-robin.
-[[nodiscard]] inline std::uint64_t samples_for_thread(std::uint64_t total, int num_threads,
-                                                      int tid) noexcept {
+[[nodiscard]] inline std::uint64_t samples_for_thread(const std::uint64_t total,
+                                                      const int num_threads,
+                                                      const int tid) noexcept {
     assert(num_threads > 0 && "samples_for_thread: num_threads must be > 0");
     if (num_threads <= 0) {
         return 0;
@@ -47,10 +48,6 @@ namespace moran {
     const auto extra = (static_cast<std::uint64_t>(tid) < (total % nt)) ? 1ULL : 0ULL;
     return base + extra;
 }
-
-// ---------------------------------------------------------------------------
-// Parallel MC driver template
-// ---------------------------------------------------------------------------
 
 /// Cache-line aligned wrapper to prevent false sharing between per-thread
 /// accumulators in parallel MC simulations.
