@@ -16,7 +16,7 @@
         "CMAKE_CXX_COMPILER": "g++",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "MORAN_BUILD_TESTS": "ON",
-        "MORAN_BUILD_PYTHON": "OFF"
+        "MORAN_BUILD_PYTHON": "ON"
       }
     },
     {

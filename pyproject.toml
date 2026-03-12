@@ -1,0 +1,60 @@
+[build-system]
+requires = ["scikit-build-core>=0.11", "pybind11>=2.13"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "libmoran"
+version = "0.1.0"
+description = "Moran process fixation probability library"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: C++",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Typing :: Typed",
+]
+dependencies = [
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+networkx = ["networkx>=3.0"]
+scipy = ["scipy>=1.10"]
+
+[dependency-groups]
+test = [
+    "pytest>=8.0",
+]
+notebooks = [
+    "jupyter",
+    "matplotlib>=3.6",
+    "networkx>=3.0",
+    "scipy>=1.10",
+]
+dev = [
+    { include-group = "test" },
+    { include-group = "notebooks" },
+]
+
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+build-dir = "build/{wheel_tag}"
+wheel.packages = ["python/moran"]
+cmake.args = [
+    "-DMORAN_BUILD_TESTS=OFF",
+    "-DMORAN_BUILD_PYTHON=ON",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["build-python"]
+minversion = "8.0"
+addopts = ["-ra", "--strict-markers"]
+markers = [
+    "slow: marks tests that run >10s",
+    "stochastic: marks tests with inherent randomness",
+]

@@ -110,6 +110,60 @@ if (MORAN_BUILD_TESTS)
 endif ()
 
 # ---------------------------------------------------------------------------
+# Python bindings (pybind11)
+# ---------------------------------------------------------------------------
+if (MORAN_BUILD_PYTHON)
+    if (NOT Python3_EXECUTABLE AND EXISTS "${PROJECT_SOURCE_DIR}/.venv/bin/python")
+        set(Python3_EXECUTABLE "${PROJECT_SOURCE_DIR}/.venv/bin/python"
+                CACHE FILEPATH "Python interpreter (auto-detected from .venv)" FORCE)
+        message(STATUS "Auto-detected venv Python: ${Python3_EXECUTABLE}")
+    endif ()
+
+    find_package(Python3 REQUIRED COMPONENTS Interpreter Development.Module)
+
+    if (NOT pybind11_DIR)
+        execute_process(
+                COMMAND "${Python3_EXECUTABLE}" -m pybind11 --cmakedir
+                OUTPUT_VARIABLE _pybind11_cmake_dir
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+                ERROR_QUIET
+                RESULT_VARIABLE _pybind11_ret
+        )
+        if (_pybind11_ret EQUAL 0 AND EXISTS "${_pybind11_cmake_dir}")
+            set(pybind11_DIR "${_pybind11_cmake_dir}" CACHE PATH "pybind11 cmake dir" FORCE)
+            message(STATUS "Auto-detected pybind11: ${pybind11_DIR}")
+        endif ()
+    endif ()
+
+    find_package(pybind11 REQUIRED)
+
+    pybind11_add_module(_moran
+            python/pymoran.cpp
+            python/bind_graph.cpp
+            python/bind_algorithms.cpp
+            python/helpers.hpp
+    )
+    target_link_libraries(_moran PRIVATE moran::moran)
+
+    install(TARGETS _moran DESTINATION moran)
+
+    if (NOT SKBUILD)
+        add_custom_command(TARGET _moran POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${PROJECT_SOURCE_DIR}/python/moran
+                ${PROJECT_SOURCE_DIR}/build-python/moran
+                COMMENT "Copying moran package to build-python/"
+        )
+        add_custom_command(TARGET _moran POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy
+                $<TARGET_FILE:_moran>
+                ${PROJECT_SOURCE_DIR}/build-python/moran/$<TARGET_FILE_NAME:_moran>
+                COMMENT "Copying _moran extension into build-python/moran/"
+        )
+    endif ()
+endif ()
+
+# ---------------------------------------------------------------------------
 # Install
 # ---------------------------------------------------------------------------
 install(TARGETS moran moran_compiler_flags
