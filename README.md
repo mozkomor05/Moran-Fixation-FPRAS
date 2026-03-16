@@ -43,4 +43,4 @@ jupyter notebook notebooks/
 ## References
 
 - Díaz, Goldberg, Mertzios, Richerby, Serna & Spirakis (2014). [Approximating fixation probabilities in the generalized Moran process](https://arxiv.org/abs/1111.3321). *Algorithmica*, 69, 78–91.
-- Lieberman, Hauert & Nowak (2005). [Evolutionary dynamics on graphs](https://doi.org/10.1038/nature03204). *Nature*, 433, 312–316.
+- Lieberman, Hauert & Nowak (2005). [Evolutionary dynamics on graphs](https://www.researchgate.net/publication/8069911_Evolutionary_Dynamics_on_Graphs). *Nature*, 433, 312–316.
