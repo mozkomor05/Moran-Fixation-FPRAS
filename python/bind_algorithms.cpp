@@ -40,10 +40,10 @@ void bind_algorithms(py::module_& m) {
     auto exact = alg.def_submodule("exact", "Exact fixation probability formulas");
 
     exact.def("well_mixed", &moran::exact::well_mixed, py::arg("n"), py::arg("r"),
-              "Exact well-mixed fixation: (1-1/r)/(1-1/r^n).");
+              "Fixation on K_n: (1-1/r)/(1-1/r^n).");
 
     exact.def("isothermal_regular", &moran::exact::isothermal_regular, py::arg("n"), py::arg("r"),
-              "Exact isothermal regular graph fixation (same as well-mixed).");
+              "Fixation on regular graphs (isothermal theorem).");
 
     exact.def("r_equals_1", &moran::exact::r_equals_1, py::arg("n"),
               "Neutral drift fixation probability: 1/n.");
@@ -59,8 +59,8 @@ void bind_algorithms(py::module_& m) {
         },
         py::arg("graph"), py::arg("r"), "Try exact formula; returns FixationResult or None.");
 
-    // Well-mixed exact (Result<T> API)
-    auto wm = alg.def_submodule("wellmixed", "Well-mixed population formulas");
+    // Complete graph exact (Result<T> API)
+    auto wm = alg.def_submodule("wellmixed", "Complete graph (K_n) formulas");
 
     wm.def(
         "fixation_probability",

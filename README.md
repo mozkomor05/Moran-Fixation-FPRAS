@@ -6,8 +6,8 @@ C++23 header-only library for computing fixation probabilities of the Moran proc
 
 | Algorithm | Paper | Notes |
 |-----------|-------|-------|
-| **Exact** | Lieberman et al. 2005 | Well-mixed formula, isothermal theorem, r=1 |
-| **Naive MC** | Diaz et al. 2014, Theorem 13 | Simulates all BD steps, O(n^4) per run |
+| **Exact** | Lieberman et al. 2005 | Complete graphs, isothermal theorem (regular graphs), r=1 |
+| **Naive MC** | Diaz et al. 2014, Theorem 13 | Simulates all BD steps, O(r/\|r-1\| * n^6 / eps^2) total |
 
 All MC algorithms use an **epsilon-first API**: specify `(epsilon, delta)` and the library derives sample counts and step limits.
 
@@ -39,6 +39,10 @@ result = moran.fixation_probability(star_graph(20), 1.5, epsilon=0.1)
 pip install -e . --group notebooks   # if not already in dev group
 jupyter notebook notebooks/
 ```
+
+## Documentation
+
+- [Project specification](docs/specification.md) (in Czech)
 
 ## References
 

@@ -19,8 +19,7 @@
 
 namespace moran::exact {
 
-/// Well-mixed fixation probability: (1 - 1/r) / (1 - 1/r^n).
-/// For r near 1, returns 1/n via L'Hopital (handled by stable_fixation_ratio).
+/// Fixation on complete graph K_n: (1 - 1/r) / (1 - 1/r^n).
 [[nodiscard]] inline double well_mixed(const std::size_t n, const double r) {
     if (n == 0) {
         return 0.0;
@@ -31,8 +30,7 @@ namespace moran::exact {
     return numeric::stable_fixation_ratio(r, 1.0, static_cast<double>(n));
 }
 
-/// Isothermal theorem: regular graphs have the same fixation probability
-/// as well-mixed (Lieberman, Hauert & Nowak, Nature 2005).
+/// Isothermal theorem: regular graphs have the same rho as K_n (Lieberman et al. 2005).
 [[nodiscard]] inline double isothermal_regular(const std::size_t n, const double r) {
     return well_mixed(n, r);
 }
@@ -135,8 +133,8 @@ template <MoranScalar Scalar, typename GammaFn>
 ///
 /// Decision logic:
 ///   1. r == 1 (within 1e-12) -> 1/n
-///   2. Graph is complete (degree = n-1) -> well-mixed formula
-///   3. Graph is regular -> isothermal formula
+///   2. Complete graph (degree = n-1) -> K_n formula
+///   3. Regular graph -> isothermal theorem
 ///   4. Otherwise -> nullopt
 template <typename GraphType>
 [[nodiscard]] std::optional<FixationResult> try_exact(const GraphType& g, const double r) {
