@@ -13,11 +13,19 @@ All MC algorithms use an **epsilon-first API**: specify `(epsilon, delta)` and t
 
 ## Build
 
+Requires GCC 13+, CMake 3.25+, Ninja, pybind11, and Python 3.10+.
+
+```bash
+./build.sh              # configure + build + run all tests
+```
+
+Or manually:
+
 ```bash
 cmake --preset dev-debug
 cmake --build build/debug --parallel
-./build/debug/moran_tests
-python -m pytest tests/
+./build/debug/moran_tests       # 37 C++ tests
+python -m pytest tests/         # 36 Python tests
 ```
 
 ## Python
