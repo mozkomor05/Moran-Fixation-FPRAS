@@ -11,10 +11,18 @@ if TYPE_CHECKING:
 
 __version__: str
 
+
 class MoranError(RuntimeError): ...
+
+
 class InvalidInputError(MoranError): ...
+
+
 class MaxStepsExceededError(MoranError): ...
+
+
 class NumericalError(MoranError): ...
+
 
 class Method(enum.Enum):
     exact_well_mixed = ...
@@ -24,6 +32,7 @@ class Method(enum.Enum):
     fpras_chatterjee = ...
     fpras_goldberg = ...
 
+
 class ErrorCode(enum.Enum):
     InvalidPopulationSize = ...
     InvalidFitness = ...
@@ -32,6 +41,7 @@ class ErrorCode(enum.Enum):
     NumericalInstability = ...
     MaxStepsExceeded = ...
     InvalidConfig = ...
+
 
 class FixationResult:
     estimate: float
@@ -46,9 +56,13 @@ class FixationResult:
     runs_aborted: int
     elapsed_seconds: float
     seed_used: int
+
     def to_dict(self) -> dict[str, object]: ...
+
     def __float__(self) -> float: ...
+
     def __repr__(self) -> str: ...
+
 
 class DegreeStats:
     min_degree: int
@@ -56,81 +70,107 @@ class DegreeStats:
     avg_degree: float
     is_regular: bool
     num_edges: int
+
     def __repr__(self) -> str: ...
+
 
 class graph:
     class CSRGraph:
         def __init__(self, num_vertices: int, src: npt.ArrayLike, dst: npt.ArrayLike) -> None: ...
+
         def num_vertices(self) -> int: ...
+
         def num_edges(self) -> int: ...
+
         def degree(self, v: int) -> int: ...
+
         def neighbors(self, v: int) -> list[int]: ...
+
         def is_connected(self) -> bool: ...
+
         def degree_stats(self) -> DegreeStats: ...
+
         @staticmethod
         def from_networkx(nx_graph: nx.Graph) -> graph.CSRGraph: ...
+
         @staticmethod
         def from_scipy_sparse(matrix: sp.sparray) -> graph.CSRGraph: ...
+
         def to_networkx(self) -> nx.Graph: ...
+
         def to_scipy_sparse(self) -> sp.csr_array: ...
+
         def __len__(self) -> int: ...
+
         def __contains__(self, v: int) -> bool: ...
+
         def __iter__(self) -> Iterator[int]: ...
+
         def __repr__(self) -> str: ...
 
     @staticmethod
     def complete_graph(n: int) -> graph.CSRGraph: ...
+
     @staticmethod
     def cycle_graph(n: int) -> graph.CSRGraph: ...
+
     @staticmethod
     def star_graph(n: int) -> graph.CSRGraph: ...
+
     @staticmethod
     def double_star_graph(a: int, b: int) -> graph.CSRGraph: ...
+
 
 class algorithms:
     @staticmethod
     def fixation_probability(
-        graph: graph.CSRGraph, r: float, *,
-        epsilon: float = ..., delta: float = ...,
-        seed: int = ..., num_threads: int = ...,
+            graph: graph.CSRGraph, r: float, *,
+            epsilon: float = ..., delta: float = ...,
+            seed: int = ..., num_threads: int = ...,
     ) -> FixationResult: ...
 
     class exact:
         @staticmethod
         def well_mixed(n: int, r: float) -> float: ...
+
         @staticmethod
         def isothermal_regular(n: int, r: float) -> float: ...
+
         @staticmethod
         def r_equals_1(n: int) -> float: ...
+
         @staticmethod
         def try_exact(graph: graph.CSRGraph, r: float) -> FixationResult | None: ...
 
     class wellmixed:
         @staticmethod
         def fixation_probability(N: int, r: float) -> float: ...
+
         @staticmethod
         def fixation_probability_from(N: int, i0: int, r: float) -> float: ...
 
     class graph_structured:
         @staticmethod
         def naive_mc_fixation(
-            graph: graph.CSRGraph, r: float, *,
-            epsilon: float = ..., delta: float = ...,
-            seed: int = ..., num_threads: int = ...,
+                graph: graph.CSRGraph, r: float, *,
+                epsilon: float = ..., delta: float = ...,
+                seed: int = ..., num_threads: int = ...,
         ) -> FixationResult: ...
 
     class params:
         class DerivedParams:
             samples: int
             per_run_step_limit: int
+
             def __repr__(self) -> str: ...
 
         @staticmethod
         def diaz_naive(
-            n: int, r: float, *,
-            epsilon: float = ..., delta: float = ...,
+                n: int, r: float, *,
+                epsilon: float = ..., delta: float = ...,
         ) -> DerivedParams: ...
+
         @staticmethod
         def multiplicative_ci(
-            estimate: float, epsilon: float,
+                estimate: float, epsilon: float,
         ) -> tuple[float, float]: ...
