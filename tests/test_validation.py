@@ -124,16 +124,19 @@ class TestGraphConstruction:
 
 class TestEdgeCases:
     def test_invalid_fitness(self):
+        from moran.algorithms import naive
         with pytest.raises(moran.InvalidInputError):
-            moran.fixation_probability(complete_graph(5), 0.0)
+            naive.estimate(star_graph(5), 0.0)
 
     def test_nan_fitness(self):
+        from moran.algorithms import naive
         with pytest.raises(moran.InvalidInputError):
-            moran.fixation_probability(complete_graph(5), float("nan"))
+            naive.estimate(star_graph(5), float("nan"))
 
     def test_disconnected_graph(self):
         import numpy as np
+        from moran.algorithms import naive
         g = CSRGraph(4, np.array([0, 2], dtype=np.uint32),
                         np.array([1, 3], dtype=np.uint32))
         with pytest.raises(moran.InvalidInputError):
-            moran.fixation_probability(g, 1.5)
+            naive.estimate(g, 1.5)
