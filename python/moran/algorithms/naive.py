@@ -1,7 +1,7 @@
 """Naive Monte Carlo -- Diaz et al. 2014 (Algorithmica, Theorem 13).
 
 Simulates all birth-death steps including ineffective ones.
-Absorption time bound: O(r/|r-1| * n^4).
+Per-run absorption bound: O(r/|r-1| * n^4), total: O(r/|r-1| * n^6 / eps^2).
 """
 
 from .._moran import FixationResult, algorithms as _alg

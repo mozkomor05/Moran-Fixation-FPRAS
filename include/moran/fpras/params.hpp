@@ -3,7 +3,7 @@
 /// @brief FPRAS parameter derivation from epsilon/delta.
 ///
 /// Formulas from:
-///   - Diaz et al. (Algorithmica 2014), Theorem 13 / Corollary 10
+///   - Diaz et al. (Algorithmica 2014), Theorem 13 / Corollary 8 / 10
 
 #include <algorithm>
 #include <cmath>
@@ -57,19 +57,30 @@ struct DerivedParams {
     return std::max(std::uint64_t{1}, safe_ceil(ratio));
 }
 
-/// Diaz absorption time bound (Corollary 10).
-/// E[tau] <= r/|r-1| * n^4, with safety_factor=4 for Markov's inequality.
-[[nodiscard]] inline double diaz_absorption_bound(const std::size_t n, const double r) noexcept {
-    constexpr double safety_factor = 4.0;
+/// Per-run step limit: 8N * E[tau], Markov/union bound (Theorem 13).
+/// r > 1: E[tau] <= r/(r-1) * n^4 (Cor. 10). r < 1: E[tau] <= 1/(1-r) * n^3 (Cor. 8).
+[[nodiscard]] inline double diaz_step_limit(const std::size_t n, const double r,
+                                            const std::uint64_t num_samples) noexcept {
     const auto nd = static_cast<double>(n);
-    const auto n4 = nd * nd * nd * nd;
+    const auto ns = static_cast<double>(num_samples);
+    const double markov_factor = 8.0 * ns;
+
     const double diff = std::abs(r - 1.0);
-    const double factor = (diff >= 1e-9) ? (r / diff) : 1.0;
-    return safety_factor * factor * n4;
+    if (diff < 1e-9) {
+        // r = 1: E[tau] <= n^6 (Theorem 11, conservative)
+        return markov_factor * nd * nd * nd * nd * nd * nd;
+    }
+    if (r > 1.0) {
+        // Cor. 10
+        return markov_factor * (r / diff) * nd * nd * nd * nd;
+    }
+    // Cor. 8
+    return markov_factor * (1.0 / diff) * nd * nd * nd;
 }
 
 /// Diaz 2014 naive MC parameters (Theorem 13).
-/// N = ceil(0.5 * eps^{-2} * n^2 * ln(16)).
+/// N = ceil(0.5 * eps^{-2} * n^2 * ln(16)), boosted by ceil(log_4(1/delta)).
+/// T = 8N * E[tau] per Markov/union bound.
 [[nodiscard]] inline DerivedParams diaz_naive(const std::size_t n, const double r,
                                               const Accuracy& acc) {
     const auto nd = static_cast<double>(n);
@@ -77,8 +88,8 @@ struct DerivedParams {
     const double z = 0.5 * nd * nd * std::log(16.0) / (eps * eps);
     const auto boost = median_boost(acc.delta);
     const auto samples = safe_ceil(z) * boost;
-    const auto u = safe_ceil(diaz_absorption_bound(n, r));
-    return {.samples = samples, .per_run_step_limit = u};
+    const auto step_limit = safe_ceil(diaz_step_limit(n, r, samples));
+    return {.samples = samples, .per_run_step_limit = step_limit};
 }
 
 /// Multiplicative CI: [est/(1+eps), est/(1-eps)], clamped to [0, 1].
