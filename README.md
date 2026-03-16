@@ -16,16 +16,8 @@ All MC algorithms use an **epsilon-first API**: specify `(epsilon, delta)` and t
 Requires GCC 13+, CMake 3.25+, Ninja, pybind11, and Python 3.10+.
 
 ```bash
-./build.sh              # configure + build + run all tests
-```
-
-Or manually:
-
-```bash
-cmake --preset dev-debug
-cmake --build build/debug --parallel
-./build/debug/moran_tests       # 37 C++ tests
-python -m pytest tests/         # 36 Python tests
+pip install -e . --group dev    # install all dev dependencies
+./build.sh                      # configure + build + run all tests
 ```
 
 ## Python
@@ -43,10 +35,8 @@ result = moran.fixation_probability(star_graph(20), 1.5, epsilon=0.1)
 
 ## Notebooks
 
-After building, run Jupyter from the project root:
-
 ```bash
-pip install jupyter matplotlib networkx scipy
+pip install -e . --group notebooks   # if not already in dev group
 jupyter notebook notebooks/
 ```
 
