@@ -28,7 +28,6 @@ __pycache__/
 dist/
 *.whl
 .venv/
-build-python/
 
 # Jupyter
 .ipynb_checkpoints/

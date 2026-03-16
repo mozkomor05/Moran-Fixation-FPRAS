@@ -149,16 +149,10 @@ if (MORAN_BUILD_PYTHON)
 
     if (NOT SKBUILD)
         add_custom_command(TARGET _moran POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_directory
-                ${PROJECT_SOURCE_DIR}/python/moran
-                ${PROJECT_SOURCE_DIR}/build-python/moran
-                COMMENT "Copying moran package to build-python/"
-        )
-        add_custom_command(TARGET _moran POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy
                 $<TARGET_FILE:_moran>
-                ${PROJECT_SOURCE_DIR}/build-python/moran/$<TARGET_FILE_NAME:_moran>
-                COMMENT "Copying _moran extension into build-python/moran/"
+                ${PROJECT_SOURCE_DIR}/python/moran/$<TARGET_FILE_NAME:_moran>
+                COMMENT "Copying _moran extension into python/moran/"
         )
     endif ()
 endif ()

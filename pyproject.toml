@@ -51,7 +51,7 @@ cmake.args = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["build-python"]
+pythonpath = ["python"]
 minversion = "8.0"
 addopts = ["-ra", "--strict-markers"]
 markers = [

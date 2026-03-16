@@ -17,7 +17,7 @@ All MC algorithms use an **epsilon-first API**: specify `(epsilon, delta)` and t
 cmake --preset dev-debug
 cmake --build build/debug --parallel
 ./build/debug/moran_tests
-PYTHONPATH=build-python python -m pytest tests/
+python -m pytest tests/
 ```
 
 ## Python
