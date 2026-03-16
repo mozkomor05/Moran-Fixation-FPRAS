@@ -1,3 +1,4 @@
+#include <array>
 
 #include <gtest/gtest.h>
 #include <moran/graph/csr_graph.hpp>
@@ -56,8 +57,8 @@ TEST(GraphUtils, ConnectedGraph) {
 
 TEST(GraphUtils, DisconnectedGraph) {
     // Build two disconnected components
-    CSRGraph<double>::Edge edges[] = {{0, 1}, {2, 3}};
-    const CSRGraph<double> g(4, std::span<const CSRGraph<double>::Edge>(edges, 2));
+    const std::array edges = {CSRGraph<double>::Edge{.src = 0, .dst = 1}, CSRGraph<double>::Edge{.src = 2, .dst = 3}};
+    const CSRGraph<double> g(4, std::span<const CSRGraph<double>::Edge>(edges));
     EXPECT_FALSE(is_connected(g));
 }
 

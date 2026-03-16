@@ -125,8 +125,8 @@ template <MoranScalar Scalar, typename GammaFn>
         den_terms.push_back(log_prod[k]);
     }
 
-    const Scalar log_num = numeric::log_sum_exp<Scalar>(std::span<const Scalar>(num_terms));
-    const Scalar log_den = numeric::log_sum_exp<Scalar>(std::span<const Scalar>(den_terms));
+    const auto log_num = numeric::log_sum_exp<Scalar>(std::span<const Scalar>(num_terms));
+    const auto log_den = numeric::log_sum_exp<Scalar>(std::span<const Scalar>(den_terms));
     return std::exp(log_num - log_den);
 }
 

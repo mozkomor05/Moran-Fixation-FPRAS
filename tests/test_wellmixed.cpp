@@ -6,7 +6,7 @@
 using namespace moran::exact;
 
 TEST(FixationProbability, NeutralDrift) {
-    for (std::size_t N : {2, 5, 10, 50, 100, 1000}) {
+    for (const std::size_t N : {2, 5, 10, 50, 100, 1000}) {
         auto result = fixation_exact<double>(N, 1.0);
         ASSERT_TRUE(result.has_value()) << result.error().what();
         EXPECT_NEAR(*result, 1.0 / static_cast<double>(N), 1e-12)
@@ -17,14 +17,14 @@ TEST(FixationProbability, NeutralDrift) {
 TEST(FixationProbability, AdvantagedMutant) {
     auto result = fixation_exact<double>(10, 2.0);
     ASSERT_TRUE(result.has_value());
-    double expected = (1.0 - 0.5) / (1.0 - std::pow(0.5, 10));
+    const double expected = (1.0 - 0.5) / (1.0 - std::pow(0.5, 10));
     EXPECT_NEAR(*result, expected, 1e-12);
 }
 
 TEST(FixationProbability, DisadvantagedMutant) {
     auto result = fixation_exact<double>(10, 0.5);
     ASSERT_TRUE(result.has_value());
-    double expected = (1.0 - 2.0) / (1.0 - std::pow(2.0, 10));
+    const double expected = (1.0 - 2.0) / (1.0 - std::pow(2.0, 10));
     EXPECT_NEAR(*result, expected, 1e-12);
 }
 

@@ -28,17 +28,19 @@ void bind_graph(py::module_& m) {
 
     py::class_<Graph>(gm, "CSRGraph", "Compressed Sparse Row graph for population structure.")
         .def(py::init(
-                 [](std::size_t n,
-                    py::array_t<moran::VertexId, py::array::forcecast | py::array::c_style> src,
-                    py::array_t<moran::VertexId, py::array::forcecast | py::array::c_style> dst) {
-                     auto s = src.unchecked<1>();
-                     auto d = dst.unchecked<1>();
+                 [](const std::size_t n,
+                    const py::array_t<moran::VertexId, py::array::forcecast | py::array::c_style>&
+                        src,
+                    const py::array_t<moran::VertexId, py::array::forcecast | py::array::c_style>&
+                        dst) {
+                     const auto s = src.unchecked<1>();
+                     const auto d = dst.unchecked<1>();
                      if (s.shape(0) != d.shape(0)) {
                          throw py::value_error("src and dst arrays must have same length");
                      }
-                     std::vector<typename Graph::Edge> edges(static_cast<std::size_t>(s.shape(0)));
+                     std::vector<Graph::Edge> edges(static_cast<std::size_t>(s.shape(0)));
                      for (py::ssize_t i = 0; i < s.shape(0); ++i) {
-                         edges[i] = {s(i), d(i)};
+                         edges[i] = {.src = s(i), .dst = d(i)};
                      }
                      try {
                          return Graph(n, std::span<const typename Graph::Edge>(edges));
@@ -74,7 +76,7 @@ void bind_graph(py::module_& m) {
         .def("__len__", &Graph::num_vertices)
         .def(
             "__contains__",
-            [](const Graph& g, py::int_ v_obj) {
+            [](const Graph& g, const py::int_& v_obj) {
                 auto v = v_obj.cast<std::int64_t>();
                 return v >= 0 && static_cast<std::uint64_t>(v) < g.num_vertices();
             },
@@ -86,7 +88,7 @@ void bind_graph(py::module_& m) {
 
         .def_static(
             "from_networkx",
-            [](py::object nx_graph) -> Graph {
+            [](const py::object& nx_graph) -> Graph {
                 if (py::cast<bool>(nx_graph.attr("is_directed")())) {
                     throw py::value_error("CSRGraph only supports undirected graphs");
                 }
@@ -96,11 +98,11 @@ void bind_graph(py::module_& m) {
                 const auto n = static_cast<std::size_t>(py::len(nx_graph.attr("nodes")));
                 const py::module_ nx = py::module_::import("networkx");
                 const py::object relabeled = nx.attr("convert_node_labels_to_integers")(nx_graph);
-                std::vector<typename Graph::Edge> edge_list;
+                std::vector<Graph::Edge> edge_list;
                 for (const auto& e : relabeled.attr("edges")()) {
-                    auto tup = py::cast<py::tuple>(e);
-                    edge_list.push_back(
-                        {tup[0].cast<moran::VertexId>(), tup[1].cast<moran::VertexId>()});
+                    const auto tup = py::cast<py::tuple>(e);
+                    edge_list.push_back({.src = tup[0].cast<moran::VertexId>(),
+                                         .dst = tup[1].cast<moran::VertexId>()});
                 }
                 return Graph(n, std::span<const typename Graph::Edge>(edge_list));
             },
@@ -108,7 +110,7 @@ void bind_graph(py::module_& m) {
 
         .def_static(
             "from_scipy_sparse",
-            [](py::object matrix) -> Graph {
+            [](const py::object& matrix) -> Graph {
                 const py::module_ sp = py::module_::import("scipy.sparse");
                 const py::object csr = sp.attr("csr_array")(matrix);
                 const auto shape = csr.attr("shape").cast<py::tuple>();
@@ -131,18 +133,18 @@ void bind_graph(py::module_& m) {
                     csr.attr("indices")
                         .cast<py::array_t<int64_t, py::array::forcecast | py::array::c_style>>()
                         .unchecked<1>();
-                std::vector<typename Graph::Edge> edges;
+                std::vector<Graph::Edge> edges;
                 for (std::size_t i = 0; i < n; ++i) {
                     for (auto j = ip(static_cast<py::ssize_t>(i));
                          j < ip(static_cast<py::ssize_t>(i + 1)); ++j) {
-                        auto col = static_cast<std::size_t>(idx(j));
+                        const auto col = static_cast<std::size_t>(idx(j));
                         if (col == i) {
                             throw py::value_error(
                                 std::format("Self-loops not allowed (vertex {})", i));
                         }
                         if (col > i) {
-                            edges.push_back({static_cast<moran::VertexId>(i),
-                                             static_cast<moran::VertexId>(col)});
+                            edges.push_back({.src = static_cast<moran::VertexId>(i),
+                                             .dst = static_cast<moran::VertexId>(col)});
                         }
                     }
                 }

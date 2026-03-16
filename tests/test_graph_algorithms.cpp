@@ -1,3 +1,4 @@
+#include <array>
 #include <gtest/gtest.h>
 #include <cmath>
 
@@ -18,7 +19,7 @@ TEST(NaiveMC, CompleteGraphMatchesWellMixed) {
     constexpr double r = 1.5;
     auto exact_val = exact::well_mixed(N, r);
 
-    SimulationConfig config{
+    const SimulationConfig config{
         .accuracy = {.epsilon = 0.05, .delta = 0.25},
         .seed = 42, .num_threads = 1};
 
@@ -35,7 +36,7 @@ TEST(NaiveMC, CycleIsothermal) {
     constexpr double r = 1.5;
     auto exact_val = exact::well_mixed(N, r);
 
-    SimulationConfig config{
+    const SimulationConfig config{
         .accuracy = {.epsilon = 0.05, .delta = 0.25},
         .seed = 42, .num_threads = 1};
 
@@ -48,7 +49,7 @@ TEST(NaiveMC, CycleIsothermal) {
 TEST(NaiveMC, NeutralDrift) {
     constexpr std::size_t N = 10;
 
-    SimulationConfig config{
+    const SimulationConfig config{
         .accuracy = {.epsilon = 0.05, .delta = 0.25},
         .seed = 123, .num_threads = 1};
 
@@ -60,13 +61,13 @@ TEST(NaiveMC, NeutralDrift) {
 
 TEST(NaiveMC, RejectsInvalidInputs) {
     auto g = make_complete_graph<double>(5);
-    SimulationConfig config{};
+    const SimulationConfig config{};
 
     EXPECT_FALSE(graph_structured::naive_mc_fixation(g, 0.0, config).has_value());
     EXPECT_FALSE(graph_structured::naive_mc_fixation(g, -1.0, config).has_value());
 
-    CSRGraph<double>::Edge edges[] = {{0, 1}, {2, 3}};
-    CSRGraph<double> disc(4, std::span<const CSRGraph<double>::Edge>(edges, 2));
+    const std::array edges = {CSRGraph<double>::Edge{.src = 0, .dst = 1}, CSRGraph<double>::Edge{.src = 2, .dst = 3}};
+    const CSRGraph<double> disc(4, std::span<const CSRGraph<double>::Edge>(edges));
     EXPECT_FALSE(graph_structured::naive_mc_fixation(disc, 1.5, config).has_value());
 }
 
@@ -75,7 +76,7 @@ TEST(StarGraph, AmplifiesSelection) {
     constexpr double r = 2.0;
     const auto well_mixed_val = exact::well_mixed(N, r);
 
-    SimulationConfig config{
+    const SimulationConfig config{
         .accuracy = {.epsilon = 0.1, .delta = 0.25},
         .seed = 42, .num_threads = 1};
 
@@ -92,11 +93,11 @@ TEST(Multithreaded, ConsistentResults) {
     auto exact_val = exact::well_mixed(N, r);
     auto g = make_complete_graph<double>(N);
 
-    SimulationConfig config_1t{
+    const SimulationConfig config_1t{
         .accuracy = {.epsilon = 0.05, .delta = 0.25},
         .seed = 42, .num_threads = 1};
 
-    SimulationConfig config_mt{
+    const SimulationConfig config_mt{
         .accuracy = {.epsilon = 0.05, .delta = 0.25},
         .seed = 42, .num_threads = 4};
 
@@ -112,7 +113,7 @@ TEST(Multithreaded, ConsistentResults) {
 
 TEST(StepsTotal, NaiveMCPopulated) {
     auto g = make_complete_graph<double>(8);
-    SimulationConfig config{
+    const SimulationConfig config{
         .accuracy = {.epsilon = 0.1, .delta = 0.25},
         .seed = 42, .num_threads = 1};
     auto result = graph_structured::naive_mc_fixation(g, 1.5, config);

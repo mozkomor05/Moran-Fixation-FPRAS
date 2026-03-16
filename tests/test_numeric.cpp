@@ -106,6 +106,6 @@ TEST(FixationFromLogGammas, AdvantageousMutant) {
     std::vector<double> log_gamma(N - 1, std::log(1.0 / r));
     const auto phi = fixation_from_log_gammas<double>(
         std::span<const double>(log_gamma));
-    const double expected = (1.0 - 1.0 / r) / (1.0 - std::pow(1.0 / r, N));
+    const double expected = (1.0 - (1.0 / r)) / (1.0 - std::pow(1.0 / r, N));
     EXPECT_NEAR(phi, expected, 1e-12);
 }
