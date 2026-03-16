@@ -41,6 +41,15 @@ result = moran.fixation_probability(cycle_graph(20), 1.5)
 result = moran.fixation_probability(star_graph(20), 1.5, epsilon=0.1)
 ```
 
+## Notebooks
+
+After building, run Jupyter from the project root:
+
+```bash
+pip install jupyter matplotlib networkx scipy
+jupyter notebook notebooks/
+```
+
 ## References
 
 - Díaz, Goldberg, Mertzios, Richerby, Serna & Spirakis (2014). [Approximating fixation probabilities in the generalized Moran process](https://doi.org/10.1007/s00453-012-9722-7). *Algorithmica*, 69, 78–91.
