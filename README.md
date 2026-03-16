@@ -35,5 +35,5 @@ result = moran.fixation_probability(star_graph(20), 1.5, epsilon=0.1)
 
 ## References
 
-- Diaz, Goldberg, Mertzios, Richerby, Serna & Spirakis (2014). Approximating fixation probabilities in the generalized Moran process. *Algorithmica*.
-- Lieberman, Hauert & Nowak (2005). Evolutionary dynamics on graphs. *Nature*.
+- Díaz, Goldberg, Mertzios, Richerby, Serna & Spirakis (2014). [Approximating fixation probabilities in the generalized Moran process](https://doi.org/10.1007/s00453-012-9722-7). *Algorithmica*, 69, 78–91.
+- Lieberman, Hauert & Nowak (2005). [Evolutionary dynamics on graphs](https://doi.org/10.1038/nature03204). *Nature*, 433, 312–316.
