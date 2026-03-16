@@ -9,17 +9,10 @@
 
 namespace moran {
 
-/// Numeric type for Moran process computations.
-///
-/// Algorithms use the full <cmath> surface (log, log1p, exp, sqrt, abs, isfinite),
-/// so we constrain to std::floating_point which guarantees all of these.
 template <typename T>
 concept MoranScalar = std::floating_point<T>;
 
-/// Read-only graph interface.
-///
-/// Algorithms require random-access into the neighbor list (operator[], .size()),
-/// so neighbors(v) must return a random_access_range (e.g. std::span).
+/// Read-only graph interface used by all algorithms.
 template <typename G>
 concept Graph = requires(const G& g, VertexId v) {
     { g.num_vertices() } -> std::convertible_to<std::size_t>;

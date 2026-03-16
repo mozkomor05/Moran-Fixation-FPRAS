@@ -1,9 +1,6 @@
 #pragma once
 /// @file csr_graph.hpp
-/// @brief Compressed Sparse Row (CSR) graph representation.
-///
-/// Immutable, cache-friendly graph for Moran process simulations.
-/// All arrays aligned to 64 bytes for SIMD.  O(|V| + |E|) memory.
+/// @brief Immutable CSR graph. 64-byte aligned arrays, O(|V|+|E|) memory.
 
 #include <algorithm>
 #include <cassert>
@@ -23,8 +20,7 @@
 namespace moran {
 namespace detail {
 
-/// Allocator that aligns all allocations to cache-line boundaries (64 bytes).
-/// Used by CSRGraph's internal vectors for SIMD-friendly memory access.
+/// 64-byte aligned allocator for cache-line-friendly vectors.
 template <typename T, std::size_t Alignment = 64>
 class AlignedAllocator {
 public:
@@ -38,7 +34,7 @@ public:
     AlignedAllocator() noexcept = default;
 
     template <typename U>
-    explicit AlignedAllocator(const AlignedAllocator<U, Alignment>&) noexcept {}
+    explicit AlignedAllocator(const AlignedAllocator<U, Alignment>& /*other*/) noexcept {}
 
     [[nodiscard]] T* allocate(const std::size_t n) {
         if (n == 0) {
@@ -52,14 +48,14 @@ public:
         return static_cast<T*>(::operator new(alloc_size, std::align_val_t{Alignment}));
     }
 
-    void deallocate(T* p, std::size_t) noexcept {
+    void deallocate(T* p, std::size_t /*count*/) noexcept {
         // Unsized aligned-delete: allocate() rounds up, so passing the
         // original size to sized-delete would be UB.
         ::operator delete(p, std::align_val_t{Alignment});
     }
 
     template <typename U>
-    bool operator==(const AlignedAllocator<U, Alignment>&) const noexcept {
+    bool operator==(const AlignedAllocator<U, Alignment>& /*other*/) const noexcept {
         return true;
     }
 };

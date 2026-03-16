@@ -1,9 +1,6 @@
 #pragma once
 /// @file result.hpp
 /// @brief Error handling via std::expected (C++23).
-///
-/// All fallible functions return Result<T> = std::expected<T, MoranError>.
-/// Python bindings convert MoranError to Python exceptions at the boundary.
 
 #include <cstdint>
 #include <expected>
@@ -69,7 +66,7 @@ using Result = std::expected<T, MoranError>;
 
 inline std::unexpected<MoranError> make_error(
     const ErrorCode code,
-    std::string message,  // NOLINT(performance-unnecessary-value-param) -- moved below
+    std::string message,  // NOLINT(performance-unnecessary-value-param)
     const std::source_location loc = std::source_location::current()) {
     return std::unexpected(MoranError(code, std::move(message), loc));
 }

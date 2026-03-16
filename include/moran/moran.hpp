@@ -1,6 +1,5 @@
 #pragma once
-/// @file moran.hpp
-/// @brief Umbrella header -- includes everything.
+/// Umbrella header.
 
 #include "core/concepts.hpp"
 #include "core/numeric.hpp"

@@ -40,7 +40,8 @@ public:
 
     result_type operator()() noexcept {
         const std::uint64_t result = std::rotl(state_[1] * 5, 7) * 9;
-        const std::uint64_t t = state_[1] << 17;  // NOLINT(cppcoreguidelines-init-variables)
+        const std::uint64_t t = state_[1]
+                                << 17;  // NOLINT(cppcoreguidelines-init-variables) false positive
 
         state_[2] ^= state_[0];
         state_[3] ^= state_[1];
@@ -53,7 +54,7 @@ public:
     }
 
     /// Jump forward by 2^128 steps for parallel stream independence.
-    // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
+    // NOLINTNEXTLINE(readability-convert-member-functions-to-static) mutates state_ via (*this)()
     void jump() noexcept {
         static constexpr std::array<std::uint64_t, 4> kJump = {
             0x180ec6d33cfd0abaULL, 0xd5a61266f0c9392cULL, 0xa9582618e03fc9aaULL,

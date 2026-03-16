@@ -100,7 +100,7 @@ template <MoranScalar Scalar>
 /// Stable (1 - r^{-a}) / (1 - r^{-b}). Falls back to a/b when r ~ 1.
 template <MoranScalar Scalar>
 [[nodiscard]] Scalar stable_fixation_ratio(const Scalar r, const Scalar a, const Scalar b,
-                                           const Scalar tol = Scalar(1e-12)) {
+                                           const Scalar tol = static_cast<Scalar>(1e-12)) {
     const Scalar log_r = std::log(r);
     if (std::abs(log_r) < tol) {
         return a / b;

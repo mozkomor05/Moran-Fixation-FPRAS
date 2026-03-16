@@ -12,7 +12,7 @@ PyObject* get_numerical_error();
 
 [[noreturn]] inline void throw_moran_error(const moran::MoranError& err) {
     const pybind11::gil_scoped_acquire acquire;
-    const auto msg = err.what();  // includes ErrorCode + message
+    const auto msg = err.what();
     PyObject* exc = nullptr;
     switch (err.code) {
         case moran::ErrorCode::MaxStepsExceeded:
@@ -37,7 +37,7 @@ T unwrap_or_throw(moran::Result<T>&& result) {
     throw_moran_error(result.error());
 }
 
-/// Specialization for Result<void> -- just check for error.
+/// Result<void> overload.
 inline void unwrap_or_throw(moran::Result<void>&& result) {
     if (!result) {
         throw_moran_error(result.error());

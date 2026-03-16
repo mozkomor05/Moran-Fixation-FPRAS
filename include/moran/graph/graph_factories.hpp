@@ -1,8 +1,6 @@
 #pragma once
 /// @file graph_factories.hpp
 /// @brief Factory functions for common graph topologies.
-///
-/// Complete, cycle, and star graphs used for testing and benchmarking.
 
 #include <cstddef>
 #include <span>

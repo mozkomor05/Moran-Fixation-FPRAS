@@ -42,13 +42,13 @@ enum class Method : std::uint8_t {
 
 /// Result of a fixation probability computation (exact or Monte Carlo).
 struct FixationResult {
-    double estimate;
-    double ci_lower;
-    double ci_upper;
+    double estimate = 0.0;
+    double ci_lower = 0.0;
+    double ci_upper = 0.0;
 
-    Method method;
-    double epsilon;
-    double delta;
+    Method method = Method::mc_naive;
+    double epsilon = 0.0;
+    double delta = 0.0;
 
     std::uint64_t samples = 0;
     std::uint64_t steps_total = 0;

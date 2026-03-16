@@ -12,8 +12,11 @@ Checks: >
   cppcoreguidelines-*,
   -cppcoreguidelines-avoid-magic-numbers,
   -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -cppcoreguidelines-pro-bounds-avoid-unchecked-container-access,
   misc-*,
   -misc-non-private-member-variables-in-classes,
+  -misc-include-cleaner,
 WarningsAsErrors: ''
 HeaderFilterRegex: 'include/moran/.*'
 ...

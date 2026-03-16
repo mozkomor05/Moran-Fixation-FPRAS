@@ -79,9 +79,7 @@ template <typename ThreadState, typename BodyFn>
     std::atomic<bool> aborted{false};
     std::exception_ptr thread_exception;
 
-    // Materialize callable before the parallel region.  std::forward
-    // performs at most one move (for rvalue BodyFn); all threads then
-    // invoke the same stable lvalue -- no moved-from UB.
+    // Materialize before parallel region so all threads share the same lvalue.
     auto body_fn = std::forward<BodyFn>(body);
 
 #ifdef _OPENMP

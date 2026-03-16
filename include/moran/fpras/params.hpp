@@ -61,8 +61,8 @@ struct DerivedParams {
 /// E[tau] <= r/|r-1| * n^4, with safety_factor=4 for Markov's inequality.
 [[nodiscard]] inline double diaz_absorption_bound(const std::size_t n, const double r) noexcept {
     constexpr double safety_factor = 4.0;
-    const double nd = static_cast<double>(n);
-    const double n4 = nd * nd * nd * nd;
+    const auto nd = static_cast<double>(n);
+    const auto n4 = nd * nd * nd * nd;
     const double diff = std::abs(r - 1.0);
     const double factor = (diff >= 1e-9) ? (r / diff) : 1.0;
     return safety_factor * factor * n4;
@@ -72,8 +72,8 @@ struct DerivedParams {
 /// N = ceil(0.5 * eps^{-2} * n^2 * ln(16)).
 [[nodiscard]] inline DerivedParams diaz_naive(const std::size_t n, const double r,
                                               const Accuracy& acc) {
-    const double nd = static_cast<double>(n);
-    const double eps = acc.epsilon;
+    const auto nd = static_cast<double>(n);
+    const auto eps = acc.epsilon;
     const double z = 0.5 * nd * nd * std::log(16.0) / (eps * eps);
     const auto boost = median_boost(acc.delta);
     const auto samples = safe_ceil(z) * boost;
