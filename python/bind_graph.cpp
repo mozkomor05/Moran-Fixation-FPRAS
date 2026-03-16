@@ -62,7 +62,7 @@ void bind_graph(py::module_& m) {
             "neighbors",
             [](const Graph& g, moran::VertexId v) {
                 check_vertex_bounds(g, v);
-                auto nbrs = g.neighbors(v);
+                const auto nbrs = g.neighbors(v);
                 return std::vector<moran::VertexId>(nbrs.begin(), nbrs.end());
             },
             py::arg("v"), "Return neighbor vertex IDs as a list.")
@@ -77,7 +77,7 @@ void bind_graph(py::module_& m) {
         .def(
             "__contains__",
             [](const Graph& g, const py::int_& v_obj) {
-                auto v = v_obj.cast<std::int64_t>();
+                const auto v = v_obj.cast<std::int64_t>();
                 return v >= 0 && static_cast<std::uint64_t>(v) < g.num_vertices();
             },
             py::arg("v"))
@@ -125,11 +125,11 @@ void bind_graph(py::module_& m) {
                     throw py::value_error("Adjacency matrix must be symmetric");
                 }
                 const auto n = rows;
-                auto ip =
+                const auto ip =
                     csr.attr("indptr")
                         .cast<py::array_t<int64_t, py::array::forcecast | py::array::c_style>>()
                         .unchecked<1>();
-                auto idx =
+                const auto idx =
                     csr.attr("indices")
                         .cast<py::array_t<int64_t, py::array::forcecast | py::array::c_style>>()
                         .unchecked<1>();
@@ -165,7 +165,7 @@ void bind_graph(py::module_& m) {
                 py::list edge_list;
                 for (std::size_t u = 0; u < n; ++u) {
                     for (auto pos = offsets[u]; pos < offsets[u + 1]; ++pos) {
-                        if (auto v = indices[pos]; v > u) {
+                        if (const auto v = indices[pos]; v > u) {
                             edge_list.append(py::make_tuple(u, static_cast<std::size_t>(v)));
                         }
                     }

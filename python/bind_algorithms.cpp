@@ -51,7 +51,7 @@ void bind_algorithms(py::module_& m) {
     exact.def(
         "try_exact",
         [](const Graph& g, const double r) -> py::object {
-            auto result = moran::exact::try_exact(g, r);
+            const auto result = moran::exact::try_exact(g, r);
             if (!result) {
                 return py::none();
             }
@@ -86,7 +86,7 @@ void bind_algorithms(py::module_& m) {
         "naive_mc_fixation",
         [](const Graph& graph, const double r, const double epsilon, const double delta,
            const std::uint64_t seed, const int num_threads) {
-            auto config = make_config(epsilon, delta, seed, num_threads);
+            const auto config = make_config(epsilon, delta, seed, num_threads);
             const py::gil_scoped_release release;
             return unwrap_or_throw(gs::naive_mc_fixation(graph, r, config));
         },
