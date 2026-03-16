@@ -8,7 +8,7 @@ AccessModifierOffset: -4
 BreakBeforeBraces: Attach
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: Never
-AlwaysBreakTemplateDeclarations: Yes
+BreakTemplateDeclarations: Yes
 IncludeBlocks: Regroup
 IncludeCategories:
   - Regex: '^<moran/'

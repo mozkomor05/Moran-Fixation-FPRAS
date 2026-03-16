@@ -1,9 +1,6 @@
 #pragma once
 /// @file parallel.hpp
-/// @brief OpenMP parallelism utilities: thread resolution, sample distribution, MC driver.
-///
-/// Centralizes the OpenMP boilerplate that was previously duplicated across
-/// naive_mc.hpp, active_mc.hpp, and chatterjee.hpp.
+/// @brief OpenMP parallel MC driver.
 
 #include <atomic>
 #include <cassert>
@@ -63,18 +60,7 @@ struct ParallelMCResult {
     bool aborted = false;
 };
 
-/// Run a parallel MC simulation with per-thread accumulator state.
-///
-/// Distributes num_samples across threads via round-robin, creates per-thread
-/// RNG streams (2^128-step jumps via xoshiro256**), and invokes body() once
-/// per thread inside an OpenMP parallel region.
-///
-/// @tparam ThreadState   Per-thread accumulator (must be default-constructible)
-/// @param num_samples    Total samples to distribute across threads
-/// @param seed           Master seed for reproducible RNG streams
-/// @param num_threads_hint  0 = use all available cores
-/// @param body           void(ThreadState&, uint64_t my_samples, Xoshiro256StarStar&,
-/// atomic<bool>&)
+/// Distribute num_samples across threads, each with an independent RNG stream.
 template <typename ThreadState, typename BodyFn>
 [[nodiscard]] ParallelMCResult<ThreadState> run_parallel_mc(std::uint64_t num_samples,
                                                             std::uint64_t seed,

@@ -1,5 +1,3 @@
-/// @file test_graph.cpp
-/// @brief Tests for graph representations and utilities.
 
 #include <gtest/gtest.h>
 #include <moran/graph/csr_graph.hpp>
@@ -9,9 +7,7 @@
 
 using namespace moran;
 
-// ---------------------------------------------------------------------------
 // CSR Graph construction
-// ---------------------------------------------------------------------------
 
 TEST(CSRGraph, CompleteGraph) {
     auto g = make_complete_graph<double>(5);
@@ -51,9 +47,7 @@ TEST(CSRGraph, NeighborsSorted) {
     }
 }
 
-// ---------------------------------------------------------------------------
 // Graph utilities
-// ---------------------------------------------------------------------------
 
 TEST(GraphUtils, ConnectedGraph) {
     auto g = make_complete_graph<double>(5);

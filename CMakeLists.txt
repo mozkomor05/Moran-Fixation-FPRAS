@@ -5,26 +5,20 @@ project(libmoran
         LANGUAGES CXX
 )
 
-# ---------------------------------------------------------------------------
 # Options
-# ---------------------------------------------------------------------------
 option(MORAN_BUILD_TESTS "Build C++ unit tests" ON)
 option(MORAN_BUILD_PYTHON "Build Python bindings" OFF)
 option(MORAN_USE_OPENMP "Enable OpenMP" ON)
 option(MORAN_USE_SIMD "Enable SIMD (march=native)" ON)
 
-# ---------------------------------------------------------------------------
 # Build type defaults
-# ---------------------------------------------------------------------------
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
             "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
 endif ()
 
-# ---------------------------------------------------------------------------
 # Compiler warnings
-# ---------------------------------------------------------------------------
 add_library(moran_compiler_flags INTERFACE)
 target_compile_options(moran_compiler_flags INTERFACE
         $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:
@@ -36,9 +30,7 @@ target_compile_options(moran_compiler_flags INTERFACE
         >
 )
 
-# ---------------------------------------------------------------------------
 # OpenMP
-# ---------------------------------------------------------------------------
 if (MORAN_USE_OPENMP)
     find_package(OpenMP)
     if (OpenMP_CXX_FOUND)
@@ -48,9 +40,7 @@ if (MORAN_USE_OPENMP)
     endif ()
 endif ()
 
-# ---------------------------------------------------------------------------
 # Main library (header-only, INTERFACE)
-# ---------------------------------------------------------------------------
 add_library(moran INTERFACE)
 add_library(moran::moran ALIAS moran)
 
@@ -73,13 +63,11 @@ target_sources(moran INTERFACE
 
 add_custom_target(moran_headers SOURCES ${MORAN_HEADERS})
 target_link_libraries(moran INTERFACE
-        moran_compiler_flags
+        $<BUILD_INTERFACE:moran_compiler_flags>
         $<$<BOOL:${OpenMP_CXX_FOUND}>:OpenMP::OpenMP_CXX>
 )
 
-# ---------------------------------------------------------------------------
 # Tests (Google Test)
-# ---------------------------------------------------------------------------
 if (MORAN_BUILD_TESTS)
     enable_testing()
     find_package(GTest QUIET)
@@ -109,9 +97,7 @@ if (MORAN_BUILD_TESTS)
     gtest_discover_tests(moran_tests)
 endif ()
 
-# ---------------------------------------------------------------------------
 # Python bindings (pybind11)
-# ---------------------------------------------------------------------------
 if (MORAN_BUILD_PYTHON)
     if (NOT Python3_EXECUTABLE AND EXISTS "${PROJECT_SOURCE_DIR}/.venv/bin/python")
         set(Python3_EXECUTABLE "${PROJECT_SOURCE_DIR}/.venv/bin/python"
@@ -157,10 +143,8 @@ if (MORAN_BUILD_PYTHON)
     endif ()
 endif ()
 
-# ---------------------------------------------------------------------------
 # Install
-# ---------------------------------------------------------------------------
-install(TARGETS moran moran_compiler_flags
+install(TARGETS moran
         EXPORT moranTargets
         FILE_SET HEADERS DESTINATION include
 )

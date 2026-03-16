@@ -15,7 +15,6 @@
 #include "../core/numeric.hpp"
 #include "../core/result.hpp"
 #include "../core/types.hpp"
-#include "../graph/graph_utils.hpp"
 #include "../graph/graph_validation.hpp"
 
 namespace moran::exact {

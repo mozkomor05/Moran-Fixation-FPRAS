@@ -1,5 +1,3 @@
-/// @file test_numeric.cpp
-/// @brief Tests for core numeric utilities (Kahan summation, log-sum-exp).
 
 #include <gtest/gtest.h>
 #include <cmath>
@@ -9,9 +7,7 @@
 
 using namespace moran::numeric;
 
-// ---------------------------------------------------------------------------
 // Kahan summation tests
-// ---------------------------------------------------------------------------
 
 TEST(KahanSummation, ExactForSmallSums) {
     KahanAccumulator<double> acc;
@@ -46,9 +42,7 @@ TEST(KahanSummation, SpanOverload) {
     EXPECT_NEAR(kahan_sum<double>(std::span<const double>(vals)), 2.0, 1e-10);
 }
 
-// ---------------------------------------------------------------------------
 // Log-sum-exp tests
-// ---------------------------------------------------------------------------
 
 TEST(LogSumExp, SimpleCase) {
     std::vector<double> vals = {std::log(1.0), std::numbers::ln2, std::log(3.0)};
@@ -78,9 +72,7 @@ TEST(LogSumExp, EmptyInput) {
               -std::numeric_limits<double>::infinity());
 }
 
-// ---------------------------------------------------------------------------
 // Stable fixation ratio tests
-// ---------------------------------------------------------------------------
 
 TEST(StableFixationRatio, NeutralCase) {
     // r = 1: ratio should approach a/b
@@ -93,9 +85,7 @@ TEST(StableFixationRatio, StandardCase) {
     EXPECT_NEAR(stable_fixation_ratio(2.0, 1.0, 5.0), expected, 1e-14);
 }
 
-// ---------------------------------------------------------------------------
 // Fixation from log gammas
-// ---------------------------------------------------------------------------
 
 TEST(FixationFromLogGammas, NeutralDrift) {
     // For neutral evolution (r=1), gamma_i = 1 for all i,

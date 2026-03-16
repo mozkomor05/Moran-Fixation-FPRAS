@@ -44,10 +44,8 @@ dev = [
 minimum-version = "build-system.requires"
 build-dir = "build/{wheel_tag}"
 wheel.packages = ["python/moran"]
-cmake.args = [
-    "-DMORAN_BUILD_TESTS=OFF",
-    "-DMORAN_BUILD_PYTHON=ON",
-]
+cmake.define.MORAN_BUILD_TESTS = "OFF"
+cmake.define.MORAN_BUILD_PYTHON = "ON"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

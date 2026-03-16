@@ -10,4 +10,4 @@ echo "=== C++ tests ==="
 
 echo ""
 echo "=== Python tests ==="
-python3 -m pytest tests/ -q
+${PYTHON:-python3} -m pytest tests/ -q
